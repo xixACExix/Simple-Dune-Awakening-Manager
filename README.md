@@ -4,11 +4,13 @@ Local Windows GUI manager for the Dune Awakening Self-Hosted Server package.
 
 ## Download
 
-Use the latest release ZIP:
+For normal use, download the latest release ZIP:
 
 [DuneManager by Ace v1.0.0](https://github.com/xixACExix/DuneAwakening-Manager/releases/tag/v1.0.0)
 
-Download `DuneManager-v1.0.0.zip`, extract it, then run:
+The source files in this repository mirror the release package so they can be reviewed before downloading.
+
+## Run
 
 ```powershell
 .\Start-DuneManager.bat
@@ -37,11 +39,58 @@ If the package is not found, the manager shows `Steam server package not found` 
 - Quick actions for status, start, restart, stop, update, local backup, logs, file browser, and Director.
 - Existing install detection that locks reinstall behind `Replace existing VM / reinstall`.
 
-## Notes
+## Health Watchdog
 
-Use the release ZIP, not GitHub's `Code` download button. The release package contains the manager scripts and the required SSH dependency in a clean user-ready layout.
+The Actions tab has a `Health Watchdog` section:
 
-The manager calls the official Dune Awakening self-hosted server scripts from the local Steam server package. It does not include or redistribute the game server package.
+- `Check Health` asks the VM for live battlegroup, database, gateway, and game-server readiness.
+- `Run Repair` starts the VM/world if needed and removes failed one-shot database schema pods so the official operators can recreate them.
+- `Enable watchdog` runs health checks on a timer.
+- `Auto repair` lets timed checks apply the same safe repairs.
+- `Keep world running` allows the watchdog to request a start when the battlegroup is stopped.
+
+The watchdog does not delete saves or reinstall the server.
+
+## Settings
+
+1. Open `Start-DuneManager.bat`.
+2. Go to `Settings`.
+3. Press `Load Current`.
+4. Edit the values you want.
+5. Press `Apply Settings`.
+
+The settings action backs up `UserEngine.ini` and `UserGame.ini` inside the VM before changing them. `Restart after apply` restarts the battlegroup so game servers pick up the new values immediately.
+
+## Backups And Restore
+
+Use `Actions` -> `Local Backup` to create a reinstall-safe backup under:
+
+```text
+DuneManager\backups
+```
+
+The local backup includes the official battlegroup database dump, the battlegroup YAML when available, and the `UserEngine.ini` / `UserGame.ini` settings edited by the manager.
+
+To restore after a reinstall:
+
+1. Run first-time setup so the VM and battlegroup exist again.
+2. Go to `Actions` -> `Restore Backup`.
+3. Select the `.tar.gz` archive from `DuneManager\backups`.
+4. Confirm the restore warning.
+
+Restore stops the battlegroup, imports the selected database backup, restores manager-edited ini files when present, applies default user settings, and starts the battlegroup again.
+
+## Cleanup
+
+To remove generated/imported Dune server instances without touching the Steam server package, run:
+
+```powershell
+.\Remove-InstalledInstances.bat
+```
+
+## Source
+
+The PowerShell source is published in the repository root for review. The release ZIP contains the same manager scripts plus the required SSH DLL in the layout expected by the launcher.
 
 ## License / Use
 
