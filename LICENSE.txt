@@ -1,0 +1,14 @@
+DuneManager by Ace - Use License
+
+You may use, copy, modify, and share DuneManager by Ace for personal,
+private, or community Dune Awakening self-hosted server management.
+
+You may not sell it, bundle it as paid software, or present it as an
+official Funcom tool. Dune Awakening and related names belong to their
+owners.
+
+This tool changes local Hyper-V and server files at your direction. Keep
+backups before updates, imports, or reinstalls.
+
+Signed,
+Ace
