@@ -1,24 +1,96 @@
 # DuneManager by Ace
 
-Windows GUI manager for the Dune Awakening Self-Hosted Server package.
+Local Windows GUI manager for the Dune Awakening Self-Hosted Server package.
 
-This repository is being prepared from the clean local DuneManager package. The manager automates first-time setup, server settings, local backups/restores, health checks, and common battlegroup actions.
+## Run
 
-## Current Package
-
-A clean local release ZIP has been built at:
-
-```text
-DuneManager\Source files\DuneManager-v1.0.0.zip
+```powershell
+.\Start-DuneManager.bat
 ```
 
-The source checkout can run without the bundled SSH.NET dependency; DuneManager downloads the same NuGet package automatically if the `lib` folder is missing.
+The launcher opens the GUI and requests Administrator access automatically. Administrator access is required for Hyper-V VM setup, VM start/stop, switch setup, and repair actions.
+
+## Server Package Detection
+
+DuneManager looks for the official Steam server package through Steam registry data, Steam `libraryfolders.vdf`, and common Steam library paths across local drives. You can override detection by setting:
+
+```powershell
+$env:DUNE_SERVER_ROOT = "<your Steam library>\steamapps\common\Dune Awakening Self-Hosted Server"
+```
+
+If the package is not found, the manager shows `Steam server package not found` and keeps VM-only actions available where possible.
+
+## Source Checkout Note
+
+The release ZIP includes its PowerShell SSH dependency. If you run the source files without the bundled `lib` folder, DuneManager downloads the same SSH.NET package from NuGet the first time password-based SSH setup is needed.
+
+## Main Features
+
+- First-time setup automation: VM import, Hyper-V switch setup, VM memory, SSH key setup, password change, IP setup, bootstrap upload, and initial battlegroup setup.
+- Region selection during first-time setup.
+- Server settings editor for world title, Sietch name, join password, PvP, security zones, resource multipliers, storms, sandworm behavior, durability, deterioration, and building limits.
+- Reinstall-safe local backups and restores for the battlegroup database plus manager-edited ini settings.
+- Health watchdog with optional safe auto-repair.
+- Manual repair button for failed startup/schema pods and stopped battlegroups.
+- Quick actions for status, start, restart, stop, update, local backup, logs, file browser, and Director.
+- Existing install detection that locks reinstall behind `Replace existing VM / reinstall`.
+
+## Health Watchdog
+
+The Actions tab has a `Health Watchdog` section:
+
+- `Check Health` asks the VM for live battlegroup, database, gateway, and game-server readiness.
+- `Run Repair` starts the VM/world if needed and removes failed one-shot database schema pods so the official operators can recreate them.
+- `Enable watchdog` runs health checks on a timer.
+- `Auto repair` lets timed checks apply the same safe repairs.
+- `Keep world running` allows the watchdog to request a start when the battlegroup is stopped.
+
+The watchdog does not delete saves or reinstall the server.
+
+## Settings
+
+1. Open `Start-DuneManager.bat`.
+2. Go to `Settings`.
+3. Press `Load Current`.
+4. Edit the values you want.
+5. Press `Apply Settings`.
+
+The settings action backs up `UserEngine.ini` and `UserGame.ini` inside the VM before changing them. `Restart after apply` restarts the battlegroup so game servers pick up the new values immediately.
+
+## Backups And Restore
+
+Use `Actions` -> `Local Backup` to create a reinstall-safe backup under:
+
+```text
+DuneManager\backups
+```
+
+The local backup includes the official battlegroup database dump, the battlegroup YAML when available, and the `UserEngine.ini` / `UserGame.ini` settings edited by the manager.
+
+To restore after a reinstall:
+
+1. Run first-time setup so the VM and battlegroup exist again.
+2. Go to `Actions` -> `Restore Backup`.
+3. Select the `.tar.gz` archive from `DuneManager\backups`.
+4. Confirm the restore warning.
+
+Restore stops the battlegroup, imports the selected database backup, restores manager-edited ini files when present, applies default user settings, and starts the battlegroup again.
+
+## Cleanup
+
+To remove generated/imported Dune server instances without touching the Steam server package, run:
+
+```powershell
+.\Remove-InstalledInstances.bat
+```
 
 ## License / Use
 
 DuneManager by Ace may be used, copied, modified, and shared for personal, private, or community Dune Awakening self-hosted server management.
 
 Do not sell it, bundle it as paid software, or present it as an official Funcom tool. Dune Awakening and related names belong to their owners.
+
+This tool changes local Hyper-V and server files at your direction. Keep backups before updates, imports, or reinstalls.
 
 Signed,
 Ace
