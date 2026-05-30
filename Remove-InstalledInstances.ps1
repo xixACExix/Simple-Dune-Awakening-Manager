@@ -47,7 +47,7 @@ try {
 
 $candidatePaths = @()
 foreach ($drive in 'C','D','E','F') {
-    $candidatePaths += "$drive`:DuneAwakeningServer"
+    $candidatePaths += "$drive`:\DuneAwakeningServer"
 }
 
 foreach ($path in $candidatePaths) {
