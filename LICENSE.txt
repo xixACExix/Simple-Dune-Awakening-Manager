@@ -1,7 +1,8 @@
-DuneManager by Ace - Use License
+Simple Dune Awakening Manager by Ace - Use License
 
-You may use, copy, modify, and share DuneManager by Ace for personal,
-private, or community Dune Awakening self-hosted server management.
+You may use, copy, modify, and share Simple Dune Awakening Manager by Ace
+for personal, private, or community Dune Awakening self-hosted server
+management.
 
 You may not sell it, bundle it as paid software, or present it as an
 official Funcom tool. Dune Awakening and related names belong to their
